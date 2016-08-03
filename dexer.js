@@ -113,7 +113,9 @@ var dexer = function dexer( option ){
 	}
 
 	app.get( path, function serveIndexHTML( request, response ){
-		fs.access( index, fs.constants.R_OK,
+		var mode = fs.constants? fs.constants.R_OK : fs.R_OK;
+
+		fs.access( index, mode,
 			function onAccess( error ){
 				if( error ){
 					Issue( "accessing index html", error )
