@@ -1,6 +1,6 @@
 {
   "name": "dexer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Serve index HTML file.",
   "main": "dexer.js",
   "scripts": {
@@ -25,6 +25,6 @@
   "dependencies": {
     "handlebars": "^4.0.5",
     "offcache": "0.0.0",
-    "olivant": "^0.5.1"
+    "olivant": "^0.5.2"
   }
 }
