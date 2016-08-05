@@ -109,7 +109,7 @@ var dexer = function dexer( option ){
 	if( typeof data != "object" ||
 		!data )
 	{
-		throw new Error( "invalid object" );
+		throw new Error( "invalid data" );
 	}
 
 	app.get( path, function serveIndexHTML( request, response ){
