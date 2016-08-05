@@ -1,6 +1,6 @@
 {
   "name": "dexer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Serve index HTML file.",
   "main": "dexer.js",
   "scripts": {
