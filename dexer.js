@@ -119,6 +119,7 @@ var dexer = function dexer( option ){
 			function onAccess( error ){
 				if( error ){
 					Issue( "accessing index html", error )
+						.prompt( )
 						.redirect( redirect )
 						.send( response );
 
@@ -128,6 +129,7 @@ var dexer = function dexer( option ){
 						function onRead( error, indexHTML ){
 							if( error ){
 								Issue( "reading index html", error )
+									.prompt( )
 									.redirect( redirect )
 									.send( response );
 
@@ -137,6 +139,7 @@ var dexer = function dexer( option ){
 
 								}catch( error ){
 									Issue( "processing index html", error )
+										.prompt( )
 										.redirect( redirect )
 										.send( response );
 
@@ -149,6 +152,7 @@ var dexer = function dexer( option ){
 
 							}else{
 								Warning( "empty index html", error )
+									.prompt( )
 									.redirect( redirect )
 									.send( response );
 							}
