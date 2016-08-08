@@ -49,7 +49,7 @@
 			"fs": "fs",
 			"handlebar": "handlebars"
 			"offcache": "offcache",
-			"olivant": "olivant"
+			"Olivant": "olivant"
 		}
 	@end-include
 */
@@ -57,7 +57,7 @@
 var fs = require( "fs" );
 var handlebar = require( "handlebars" );
 var offcache = require( "offcache" );
-var olivant = require( "olivant" );
+var Olivant = require( "olivant" );
 
 /*;
 	@option:
