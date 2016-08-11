@@ -47,7 +47,8 @@
 	@include:
 		{
 			"fs": "fs",
-			"handlebar": "handlebars"
+			"handlebar": "handlebars",
+			"lire": "lire",
 			"offcache": "offcache",
 			"Olivant": "olivant"
 		}
@@ -56,6 +57,7 @@
 
 var fs = require( "fs" );
 var handlebar = require( "handlebars" );
+var lire = require( "lire" );
 var offcache = require( "offcache" );
 var Olivant = require( "olivant" );
 
@@ -113,50 +115,36 @@ var dexer = function dexer( option ){
 	}
 
 	app.get( path, function serveIndexHTML( request, response ){
-		var mode = fs.constants? fs.constants.R_OK : fs.R_OK;
-
-		fs.access( index, mode,
-			function onAccess( error ){
+		lire( index )
+			( function onRead( error, indexHTML ){
 				if( error ){
-					Issue( "accessing index html", error )
+					Issue( "reading index html", error )
 						.prompt( )
 						.redirect( redirect )
 						.send( response );
 
+				}else if( indexHTML ){
+					try{
+						indexHTML = handlebar.compile( indexHTML )( data );
+
+					}catch( error ){
+						Issue( "processing index html", error )
+							.prompt( )
+							.redirect( redirect )
+							.send( response );
+
+						return;
+					}
+
+					offcache( response )
+						.set( "Content-Type", "text/html" )
+						.send( indexHTML );
+
 				}else{
-					fs.readFile( index,
-						{ "encoding": "utf8" },
-						function onRead( error, indexHTML ){
-							if( error ){
-								Issue( "reading index html", error )
-									.prompt( )
-									.redirect( redirect )
-									.send( response );
-
-							}else if( indexHTML ){
-								try{
-									indexHTML = handlebar.compile( indexHTML )( data );
-
-								}catch( error ){
-									Issue( "processing index html", error )
-										.prompt( )
-										.redirect( redirect )
-										.send( response );
-
-									return;
-								}
-
-								offcache( response )
-									.set( "Content-Type", "text/html" )
-									.send( indexHTML );
-
-							}else{
-								Warning( "empty index html", error )
-									.prompt( )
-									.redirect( redirect )
-									.send( response );
-							}
-						} );
+					Warning( "empty index html", error )
+						.prompt( )
+						.redirect( redirect )
+						.send( response );
 				}
 			} );
 	} );
