@@ -42,6 +42,7 @@
 	@end-module-configuration
 
 	@module-documentation:
+		Serve index HTML file.
 	@end-module-documentation
 
 	@include:
@@ -82,35 +83,31 @@ var dexer = function dexer( option ){
 	*/
 
 	var app = option.app;
+	if( !app ){
+		throw new Error( "no given app" );
+	}
+
 	if( typeof app.get != "function" ){
 		throw new Error( "given app has no get method" );
 	}
 
 	var path = option.path;
-	if( typeof path != "string" ||
-		!path )
-	{
+	if( typeof path != "string" || !path ){
 		throw new Error( "invalid path" );
 	}
 
 	var index = option.index;
-	if( typeof index != "string" ||
-		!index )
-	{
+	if( typeof index != "string" || !index ){
 		throw new Error( "invalid index" );
 	}
 
 	var redirect = option.redirect;
-	if( typeof redirect != "string" ||
-		!redirect )
-	{
+	if( typeof redirect != "string" || !redirect ){
 		throw new Error( "invalid redirect" );
 	}
 
 	var data = option.data;
-	if( typeof data != "object" ||
-		!data )
-	{
+	if( typeof data != "object" || !data ){
 		throw new Error( "invalid data" );
 	}
 
