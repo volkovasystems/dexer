@@ -1,10 +1,10 @@
 {
   "name": "dexer",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "description": "Serve index HTML file.",
   "main": "dexer.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha dexer-test.js"
   },
   "repository": {
     "type": "git",
@@ -17,15 +17,18 @@
     "dexer"
   ],
   "author": "Richeve S. Bebedor <richeve.bebedor@gmail.com>",
+  "contributors": [
+    "John Lenon Maghanoy <johnlenonmaghanoy@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/volkovasystems/dexer/issues"
   },
   "homepage": "https://github.com/volkovasystems/dexer#readme",
   "dependencies": {
-    "handlebars": "^4.0.5",
-    "lire": "0.0.2",
-    "offcache": "0.0.1",
-    "olivant": "^0.8.7"
+    "handlebars": "^4.0.6",
+    "lire": "^0.3.0",
+    "offcache": "^0.4.0",
+    "olivant": "^0.12.0"
   }
 }
