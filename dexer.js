@@ -5,7 +5,7 @@
 		The MIT License (MIT)
 		@mit-license
 
-		Copyright (@c) 2016 Richeve Siodina Bebedor
+		Copyright (@c) 2017 Richeve Siodina Bebedor
 		@email: richeve.bebedor@gmail.com
 
 		Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,6 +34,9 @@
 			"file": "dexer.js",
 			"module": "dexer",
 			"author": "Richeve S. Bebedor",
+			"contributors": [
+				"John Lenon Maghanoy <johnlenonmaghanoy@gmail.com>"
+			],
 			"eMail": "richeve.bebedor@gmail.com",
 			"repository": "https://github.com/volkovasystems/dexer.git",
 			"test": "dexer-test.js",
@@ -56,11 +59,11 @@
 	@end-include
 */
 
-var fs = require( "fs" );
-var handlebar = require( "handlebars" );
-var lire = require( "lire" );
-var offcache = require( "offcache" );
-var Olivant = require( "olivant" );
+const fs = require( "fs" );
+const handlebar = require( "handlebars" );
+const lire = require( "lire" );
+const offcache = require( "offcache" );
+const Olivant = require( "olivant" );
 
 /*;
 	@option:
@@ -73,7 +76,7 @@ var Olivant = require( "olivant" );
 		}
 	@end-option
 */
-var dexer = function dexer( option ){
+const dexer = function dexer( option ){
 	/*;
 		@meta-configuration:
 			{
@@ -82,7 +85,7 @@ var dexer = function dexer( option ){
 		@end-meta-configuration
 	*/
 
-	var app = option.app;
+	let app = option.app;
 	if( !app ){
 		throw new Error( "no given app" );
 	}
@@ -91,22 +94,22 @@ var dexer = function dexer( option ){
 		throw new Error( "given app has no get method" );
 	}
 
-	var path = option.path;
+	let path = option.path;
 	if( typeof path != "string" || !path ){
 		throw new Error( "invalid path" );
 	}
 
-	var index = option.index;
+	let index = option.index;
 	if( typeof index != "string" || !index ){
 		throw new Error( "invalid index" );
 	}
 
-	var redirect = option.redirect;
+	let redirect = option.redirect;
 	if( typeof redirect != "string" || !redirect ){
 		throw new Error( "invalid redirect" );
 	}
 
-	var data = option.data;
+	let data = option.data;
 	if( typeof data != "object" || !data ){
 		throw new Error( "invalid data" );
 	}
