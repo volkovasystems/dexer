@@ -1,6 +1,6 @@
 {
   "name": "dexer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Serve index HTML file.",
   "main": "dexer.js",
   "scripts": {
@@ -27,8 +27,8 @@
   "homepage": "https://github.com/volkovasystems/dexer#readme",
   "dependencies": {
     "handlebars": "^4.0.6",
-    "lire": "^0.3.0",
+    "lire": "^0.4.0",
     "offcache": "^0.4.0",
-    "olivant": "^0.12.0"
+    "olivant": "^0.13.0"
   }
 }
