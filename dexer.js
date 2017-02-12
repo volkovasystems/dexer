@@ -50,26 +50,51 @@
 
 	@include:
 		{
-			"fs": "fs",
+			"clazof": "clazof",
+			"express": "express",
+			"falzy": "falzy",
 			"handlebar": "handlebars",
+			"harden": "harden",
 			"lire": "lire",
+			"kept": "kept",
 			"offcache": "offcache",
-			"Olivant": "olivant"
+			"Olivant": "olivant",
+			"path": "path",
+			"protype": "protype",
+			"RateLimit": "express-rate-limit",
+			"truly": "truly",
+			"truu": "truu"
 		}
 	@end-include
 */
 
-const fs = require( "fs" );
+require( "olivant" );
+
+const clazof = require( "clazof" );
+const express = require( "express" );
+const falzy = require( "falzy" );
 const handlebar = require( "handlebars" );
+const harden = require( "harden" );
 const lire = require( "lire" );
+const kept = require( "kept" );
 const offcache = require( "offcache" );
-const Olivant = require( "olivant" );
+const path = require( "path" );
+const protype = require( "protype" );
+const RateLimit = require( "express-rate-limit" );
+const truly = require( "truly" );
+const truu = require( "truu" );
+
+harden( "DEFAULT_INDEX_HANDLER_PATH", "/" );
+harden( "DEFAULT_CLIENT_PATH", "client" );
+harden( "DEFAULT_INDEX", "index.html" );
+harden( "DEFAULT_REDIRECT_PATH", "/view/status/page" );
 
 /*;
 	@option:
 		{
-			"app": "APP",
-			"path": "string",
+			"middleware": "APP",
+			"rootPath": "string",
+			"clientPath": "string",
 			"index": "string",
 			"data": "object",
 			"redirect": "string"
@@ -85,63 +110,100 @@ const dexer = function dexer( option ){
 		@end-meta-configuration
 	*/
 
-	let app = option.app;
-	if( !app ){
-		throw new Error( "no given app" );
+	option = option || { };
+
+	let middleware = option.middleware || global.APP || express( );
+	if( falzy( middleware ) ){
+		throw new Error( "no given middleware" );
 	}
 
-	if( typeof app.get != "function" ){
-		throw new Error( "given app has no get method" );
+	if( !protype( middleware.get, FUNCTION ) ){
+		throw new Error( "given middleware has no get method" );
 	}
 
-	let path = option.path;
-	if( typeof path != "string" || !path ){
-		throw new Error( "invalid path" );
+	let rootPath = option.rootPath || process.cwd( );
+	if( falzy( rootPath ) || !protype( rootPath, STRING ) ){
+		throw new Error( "invalid root path" );
 	}
 
-	let index = option.index;
-	if( typeof index != "string" || !index ){
+	let clientPath = option.clientPath || DEFAULT_CLIENT_PATH;
+	if( falzy( clientPath ) || !protype( clientPath, STRING ) ){
+		throw new Error( "invalid client path" );
+	}
+
+	let index = option.index || DEFAULT_INDEX;
+	if( falzy( index ) || !protype( index, STRING ) ){
 		throw new Error( "invalid index" );
 	}
 
-	let redirect = option.redirect;
-	if( typeof redirect != "string" || !redirect ){
+	let redirect = option.redirect || DEFAULT_REDIRECT_PATH;
+	if( falzy( redirect ) || !protype( redirect, STRING ) ){
 		throw new Error( "invalid redirect" );
 	}
 
 	let data = option.data;
-	if( typeof data != "object" || !data ){
+	if( truly( data ) && !protype( data, OBJECT ) ){
 		throw new Error( "invalid data" );
 	}
 
-	app.get( path, function serveIndexHTML( request, response ){
-		lire( index )
-			( function onRead( error, indexHTML ){
-				if( error ){
-					Issue( "reading index html", error )
+	let indexPath = option.indexPath || "";
+
+	let filePath = path.resolve( rootPath, clientPath, indexPath, index );
+
+	if( !kept( filePath, true ) ){
+		Fatal( "index does not exist", filePath );
+
+		return middleware;
+	}
+
+	let handlerPath = DEFAULT_INDEX_HANDLER_PATH;
+	if( truly( indexPath ) ){
+		handlerPath = `/${ indexPath }/${ index }`;
+	}
+
+	handlerPath = handlerPath.replace( /\/+/g, "/" );
+
+	let limit = truu( option.limit )? option.limit : { "max": 3 };
+
+	limit.handler = function limit( request, response, next ){
+		Redundant( `multiple request to ${ handlerPath }` )
+			.silence( )
+			.prompt( )
+			.send( response );
+	};
+
+	let rateLimit = new RateLimit( limit );
+
+	middleware.get( handlerPath, rateLimit, function index( request, response ){
+		lire( filePath )
+			( function done( error, index ){
+				if( clazof( error, Error ) ){
+					Issue( "reading index", error )
 						.prompt( )
 						.redirect( redirect )
 						.send( response );
 
-				}else if( indexHTML ){
-					try{
-						indexHTML = handlebar.compile( indexHTML )( data );
+				}else if( truly( index ) ){
+					if( truu( data ) ){
+						try{
+							index = handlebar.compile( index )( data );
 
-					}catch( error ){
-						Issue( "processing index html", error )
-							.prompt( )
-							.redirect( redirect )
-							.send( response );
+						}catch( error ){
+							Issue( "processing index", error, data )
+								.prompt( )
+								.redirect( redirect )
+								.send( response );
 
-						return;
+							return;
+						}
 					}
 
 					offcache( response )
 						.set( "Content-Type", "text/html" )
-						.send( indexHTML );
+						.send( index );
 
 				}else{
-					Warning( "empty index html", error )
+					Warning( "empty index", handlerPath )
 						.prompt( )
 						.redirect( redirect )
 						.send( response );
@@ -149,7 +211,10 @@ const dexer = function dexer( option ){
 			} );
 	} );
 
-	return app;
+	Prompt( `index service for ${ handlerPath } is now active` )
+		.remind( `serving ${ filePath }` );
+
+	return middleware;
 };
 
 module.exports = dexer;
